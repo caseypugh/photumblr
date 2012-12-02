@@ -1,4 +1,3 @@
-
 (function($) {
   var Photumblr = function(el, options) {
     var imgs = $(el).find('img');
@@ -24,8 +23,14 @@
 
       redraw();
 
-      // bg.css('opactiy', '0');
-      // bg.animate({ opacity: '1' }, 500);
+      renderHires(current_img);
+    }
+
+    var renderHires = function(i) {
+      var cur_img = slideshow_imgs[i];
+      if (cur_img && cur_img.attr('src') != cur_img.data('hd') && cur_img.data('hd')) {
+        cur_img.attr('src', cur_img.data('hd'));
+      }
     }
 
     var endSlideshow = function() {
@@ -46,6 +51,8 @@
         current_img = i;
       }
 
+      renderHires(current_img);
+      renderHires(current_img+1);
       redraw();
     }
 
@@ -131,7 +138,7 @@
       var cls = '.' + namespace;
       var style = document.createElement('style');
       style.innerHTML = 'body.slideshow-mode { overflow:hidden; } ' +
-      cls + 'bg { background-color: #000; background: rgba(0,0,0,0.9); position: fixed; top: 0; left: 0; width: 100%; z-index: 999998; cursor: pointer; }' +
+      cls + 'bg { background-color: #000; background: rgba(0,0,0,0.85); position: fixed; top: 0; left: 0; width: 100%; z-index: 999998; cursor: pointer; }' +
       cls + 'viewport { cursor: pointer; position: fixed; top: 0; left: 0; overflow: hidden; z-index: 999999;}' +
       cls + 'viewport ' + cls + 'container img { position: absolute; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; }';
       $(document.body).append(style);
@@ -152,6 +159,7 @@
         // Events for slideshow photos
         var img = $(document.createElement('img')).attr('src', $(this).attr('src'));
         img.addClass('img');
+        img.data('hd', $(this).data('hd'));
 
         img.click(function(event) {
           onPhotoClick(i);
