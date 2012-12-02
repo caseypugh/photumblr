@@ -1,26 +1,26 @@
 <html>
   <head>
     <style>
-      #image-list img {
-        float: left;
-        width: 200px;
-        cursor: pointer;
+
+      body, html {
+        margin:0; padding:0;
       }
 
-      .bg { background-color: #000; background: rgba(0,0,0,0.8); position: fixed; top: 0; width: 100%; z-index: 999998; }
-      .viewport { position: fixed; top: 0; left: 0; overflow: hidden; z-index: 999999;}
-      .viewport .container {  }
-      .viewport .container img { position: absolute; }
+      #image-list img {
+        margin: 50px;
+        width: 300px;
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
 
     <div id="image-list">
-      <img src="images/image1.jpg" />
-      <img src="images/image2.jpg" />
-      <img src="images/image3.jpg" />
-      <img src="images/image4.jpg" />
-      <img src="images/image5.jpg" />
+      <div><img src="images/image1.jpg" /></div>
+      <div><img src="images/image2.jpg" /></div>
+      <div><img src="images/image3.jpg" /></div>
+      <div><img src="images/image4.jpg" /></div>
+      <div><img src="images/image5.jpg" /></div>
     </div>
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
