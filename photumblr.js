@@ -36,6 +36,8 @@
     }
 
     var onPhotoClick = function(i) {
+      if (i < 0) i = imgs.length - 1;
+
       if (i == current_img) {
         current_img += 1;
         if (current_img >= imgs.length) current_img = 0;
@@ -109,6 +111,20 @@
       })
     }
 
+    var onKeyDown = function(event) {
+      if (event.keyCode == 27) {
+        endSlideshow();
+      }
+
+      if (event.keyCode == 37) {
+        onPhotoClick(current_img - 1);
+      }
+
+      if (event.keyCode == 39) {
+        onPhotoClick(current_img);
+      }
+    }
+
     var init = function() {
       $(document.body).append(viewport.append(container)).append(bg)
 
@@ -144,7 +160,9 @@
         container.append(img);
 
         slideshow_imgs.push(img);
-      })
+      });
+
+      $(window).keydown(onKeyDown);
 
       $(window).resize(redraw);
       redraw();
