@@ -11,6 +11,7 @@
     var bg = $(document.createElement('div')).addClass(namespace+'bg');
     var container = $(document.createElement('div')).addClass(namespace+'container');
     var viewport = $(document.createElement('div')).addClass(namespace+'viewport');
+    var close_btn = $(document.createElement('div')).addClass(namespace+'close');
     var current_img = 0;
 
     var startSlideshow = function(i) {
@@ -18,6 +19,7 @@
 
       current_img = i;
 
+      close_btn.show();
       viewport.show();
       bg.show();
 
@@ -38,6 +40,7 @@
 
       viewport.hide();
       bg.hide();
+      close_btn.hide();
     }
 
     var onPhotoClick = function(i) {
@@ -59,6 +62,7 @@
     var redraw = function() {
       // TODO cleaner way to get the viewport height?
       var window_height = $(window)[0].innerHeight;
+      if (!window_height) window_height = $(window).height();
 
       viewport.width($(window).width());
       viewport.height(window_height);
@@ -79,8 +83,8 @@
         var ratio = img.data('height') / img.data('width');
         var iratio = img.data('width') / img.data('height');
 
-        var maxw = $(window).width() * .7;
-        var maxh = window_height * .8;
+        var maxw = $(window).width() * .8;
+        var maxh = window_height * .9;
 
         // Too tall?
         if (maxw * ratio > maxh) {
@@ -93,8 +97,7 @@
         }
 
         var left = $(window).width() / 2 - img.width() / 2;
-        var tab_size = 80;
-
+        var tab_size = 100;
 
         if (left - tab_size < 40) {
           tab_size = left - tab_size + 40;
@@ -133,21 +136,36 @@
     }
 
     var init = function() {
-      $(document.body).append(viewport.append(container)).append(bg)
+      $(document.body).append(viewport.append(container)).append(close_btn).append(bg)
+
+      close_btn.html('&times;');
 
       var cls = '.' + namespace;
-      var style = document.createElement('style');
-      style.innerHTML = 'body.slideshow-mode { overflow:hidden; } ' +
-      cls + 'bg { background-color: #000; background: rgba(0,0,0,0.85); position: fixed; top: 0; left: 0; width: 100%; z-index: 999998; cursor: pointer; }' +
-      cls + 'viewport { cursor: pointer; position: fixed; top: 0; left: 0; overflow: hidden; z-index: 999999;}' +
+      var css = 'body.slideshow-mode { overflow:hidden; } ' +
+      cls + 'bg { background-color: #000; background: rgba(0,0,0,0.85); position: fixed; top: 0; left: 0; width: 100%; z-index: 999997; cursor: pointer; }' +
+      cls + 'viewport { cursor: pointer; position: fixed; top: 0; left: 0; overflow: hidden; z-index: 999998;}' +
+      cls + 'close { cursor: pointer; position: fixed; top: 10px; right: 10px; z-index: 999999; font: bold 24px Helvetica, Arial; color: #fff; }' +
       cls + 'viewport ' + cls + 'container img { position: absolute; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; }';
-      $(document.body).append(style);
+
+      var head  = document.getElementsByTagName('head')[0];
+      var style = document.createElement('style');
+      style.type = 'text/css';
+
+      // For IE
+      if (style.styleSheet)
+        style.styleSheet.cssText = css;
+      else
+        style.appendChild(document.createTextNode(css));
+
+      head.appendChild(style);
 
       viewport.hide();
       bg.hide();
+      close_btn.hide();
 
       viewport.click(endSlideshow);
       bg.click(endSlideshow);
+      close_btn.click(endSlideshow);
 
       imgs.each(function(i, el) {
 
@@ -161,17 +179,17 @@
         img.addClass('img');
         img.data('hd', $(this).data('hd'));
 
+        container.append(img);
+
         img.click(function(event) {
           onPhotoClick(i);
           event.stopPropagation();
         });
-        container.append(img);
 
         slideshow_imgs.push(img);
       });
 
       $(window).keydown(onKeyDown);
-
       $(window).resize(redraw);
       redraw();
     }
